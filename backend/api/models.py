@@ -37,17 +37,13 @@ class HotelRoomBooking(models.Model):
     booking_created_at = models.DateTimeField(auto_now_add=True)
     updated = models.BooleanField(default=False)
 
-    def save(self, *args, **kwargs):
-        # Eğer kullanıcı daha önce rezervasyonunu güncellediyse, kaydetmeyi engelle
+    def update_booking(self, **kwargs):
         if self.updated:
-            raise Exception("you can not update this booking again")
-        # Eğer yeni bir rezervasyon ise, kaydet
-        if self.pk is None:
-            super().save(*args, **kwargs)
-        # Eğer varolan bir rezervasyonu güncelliyorsa, updated alanını True yap ve kaydet
-        else:
-            self.updated = True
-            super().save(*args, **kwargs)
+            raise ValueError("Booking can only be updated once.")
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+        self.updated = True
+        self.save()
 
     def __str__(self):
         return self.booking_name

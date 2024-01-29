@@ -35,3 +35,18 @@ def get_bookings(request):
     hotel_room_booking = HotelRoomBooking.objects.all()
     serializer = HotelRoomBookingSerializer(hotel_room_booking, many=True)
     return Response(serializer.data)
+
+
+@api_view(["POST"])
+def update_booking(request, pk):
+    hotel_room_booking = HotelRoomBooking.objects.get(id=pk)
+    if hotel_room_booking.updated:
+        return Response({"error": "Booking can only be updated once."}, status=400)
+    serializer = HotelRoomBookingSerializer(
+        hotel_room_booking, data=request.data, partial=True
+    )
+    if serializer.is_valid():
+        hotel_room_booking.updated = True
+        hotel_room_booking.save()
+        return Response(serializer.data)
+    return Response(serializer.errors, status=400)
