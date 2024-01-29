@@ -35,5 +35,3 @@ def get_bookings(request):
     hotel_room_booking = HotelRoomBooking.objects.all()
     serializer = HotelRoomBookingSerializer(hotel_room_booking, many=True)
     return Response(serializer.data)
-
-

@@ -14,7 +14,7 @@ class HotelRoom(models.Model):
 
     def __str__(self):
         return self.room_type
-    
+
 
 class HotelRoomBooking(models.Model):
     room_number = models.IntegerField()
@@ -35,7 +35,19 @@ class HotelRoomBooking(models.Model):
     booking_total = models.IntegerField()
     booking_status = models.CharField(max_length=50)
     booking_created_at = models.DateTimeField(auto_now_add=True)
+    updated = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+        # Eğer kullanıcı daha önce rezervasyonunu güncellediyse, kaydetmeyi engelle
+        if self.updated:
+            raise Exception("you can not update this booking again")
+        # Eğer yeni bir rezervasyon ise, kaydet
+        if self.pk is None:
+            super().save(*args, **kwargs)
+        # Eğer varolan bir rezervasyonu güncelliyorsa, updated alanını True yap ve kaydet
+        else:
+            self.updated = True
+            super().save(*args, **kwargs)
 
     def __str__(self):
         return self.booking_name
-
