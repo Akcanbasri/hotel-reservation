@@ -37,13 +37,11 @@ class HotelRoomBooking(models.Model):
     booking_created_at = models.DateTimeField(auto_now_add=True)
     updated = models.BooleanField(default=False)
 
-    def update_booking(self, **kwargs):
-        if self.updated:
-            raise ValueError("Booking can only be updated once.")
-        for key, value in kwargs.items():
-            setattr(self, key, value)
-        self.updated = True
-        self.save()
+    # user who is logged in can only update his booking one time only
+    def save(self, *args, **kwargs):
+        if self.updated is False:
+            self.updated = True
+        super(HotelRoomBooking, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.booking_name
