@@ -26,13 +26,13 @@ class BookingRoom(models.Model):
     booking_created_at = models.DateTimeField(auto_now_add=True)
     updated = models.BooleanField(default=False)
 
-    # user who is logged in can only update his booking one time only
-    # if he has already updated his booking then he can't update it again
-    def save(self, *args, **kwargs):
-        # if user update a room one time return True on updated field
-        if self.updated:
-            raise ValueError("You can't update this room anymore.")
-        super().save(*args, **kwargs)
+    # # user who is logged in can only update his booking one time only
+    # # if he has already updated his booking then he can't update it again
+    # def save(self, *args, **kwargs):
+    #     # if user update a room one time return True on updated field
+    #     if self.updated:
+    #         raise ValueError("You can't update this room anymore.")
+    #     super().save(*args, **kwargs)
 
     def __str__(self):
         return self.booking_name

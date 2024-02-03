@@ -49,5 +49,7 @@ def update_booking(request, pk):
     booking_room = get_object_or_404(BookingRoom, pk=pk)
     serializer = BookingRoomSerializer(instance=booking_room, data=request.data)
     if serializer.is_valid():
+        if booking_room.updated:
+            return Response("You can't update this room anymore.")
         serializer.save()
     return Response(serializer.data)
